@@ -155,7 +155,7 @@ export default function InicioPage() {
           <div className="relative h-64 w-full overflow-hidden rounded-2xl border border-stone-200/90 bg-[#0F766E] shadow-sm sm:h-80 lg:h-full lg:min-h-[340px]">
             {!heroImageError ? (
               <img
-                src="/src/assets/images/illus_caso_estudio_1794525319577.jpg"
+                src="/inicio.png"
                 alt="Ilustración editorial de montañas venezolanas, brújula y estaciones tecnológicas conectadas"
                 referrerPolicy="no-referrer"
                 onError={() => setHeroImageError(true)}
@@ -326,7 +326,7 @@ export default function InicioPage() {
             <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-xs">
               {!sessionsImageError ? (
                 <img
-                  src="/src/assets/images/illus_sesiones_1794525322301.jpg"
+                  src="/sesiones.png"
                   alt="Ilustración de cuatro bloques progresivos de aprendizaje y conectividad"
                   referrerPolicy="no-referrer"
                   onError={() => setSessionsImageError(true)}
