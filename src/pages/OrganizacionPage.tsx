@@ -223,7 +223,7 @@ export default function OrganizacionPage() {
           <div className="relative h-56 w-full overflow-hidden rounded-2xl border border-stone-200 bg-[#FAF8F3] shadow-xs sm:h-64 lg:h-full lg:min-h-[240px]">
             {!imageError ? (
               <img
-                src="/src/assets/images/illus_organizacion_1794525319977.jpg"
+                src="/organizacion.png"
                 alt="Ilustración arquitectónica de sede principal y tres sucursales regionales"
                 referrerPolicy="no-referrer"
                 onError={() => setImageError(true)}
