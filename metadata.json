@@ -1,0 +1,6 @@
+{
+  "name": "Portafolio Académico — Aventura en los Paisajes",
+  "description": "Portafolio universitario de estudio de caso y sesiones didácticas sobre la Organización de Turismo Nacional Aventura en los paisajes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
