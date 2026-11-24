@@ -19,6 +19,10 @@ import {
   truncateWords,
 } from '../data/portfolioData';
 
+interface InicioPageProps {
+  onOpenSession?: (sessionId: number) => void;
+}
+
 const METRIC_STYLES = [
   { numColor: 'text-[#1D4ED8]', borderAccent: 'border-t-[#1D4ED8]' },
   { numColor: 'text-[#0F766E]', borderAccent: 'border-t-[#0D9488]' },
@@ -63,7 +67,7 @@ const SECTION_NUM_COLORS = [
   'text-[#B45309]',
 ];
 
-export default function InicioPage() {
+export default function InicioPage({ onOpenSession }: InicioPageProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [heroImageError, setHeroImageError] = useState(false);
   const [sessionsImageError, setSessionsImageError] = useState(false);
@@ -155,7 +159,7 @@ export default function InicioPage() {
           <div className="relative h-64 w-full overflow-hidden rounded-2xl border border-stone-200/90 bg-[#0F766E] shadow-sm sm:h-80 lg:h-full lg:min-h-[340px]">
             {!heroImageError ? (
               <img
-                src="/inicio.png"
+                src="/src/assets/images/illus_caso_estudio_1794525319577.jpg"
                 alt="Ilustración editorial de montañas venezolanas, brújula y estaciones tecnológicas conectadas"
                 referrerPolicy="no-referrer"
                 onError={() => setHeroImageError(true)}
@@ -326,7 +330,7 @@ export default function InicioPage() {
             <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-xs">
               {!sessionsImageError ? (
                 <img
-                  src="/sesiones.png"
+                  src="/src/assets/images/illus_sesiones_1794525322301.jpg"
                   alt="Ilustración de cuatro bloques progresivos de aprendizaje y conectividad"
                   referrerPolicy="no-referrer"
                   onError={() => setSessionsImageError(true)}
@@ -358,11 +362,15 @@ export default function InicioPage() {
                   delay: 0.05 * index,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                onClick={() =>
+                onClick={() => {
+                  if (session.id === 1 && onOpenSession) {
+                    onOpenSession(1);
+                    return;
+                  }
                   setSelectedSessionId((prev) =>
                     prev === session.id ? null : session.id
-                  )
-                }
+                  );
+                }}
                 aria-pressed={isSelected}
                 className={`group relative flex cursor-pointer flex-col justify-between rounded-2xl border p-6 text-left transition-all duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1D4ED8] ${
                   isSelected
