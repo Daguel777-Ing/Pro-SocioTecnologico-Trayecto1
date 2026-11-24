@@ -8,11 +8,13 @@ import {
 import EstudiantePage from './pages/EstudiantePage';
 import InicioPage from './pages/InicioPage';
 import OrganizacionPage from './pages/OrganizacionPage';
+import SesionDidactica1 from './pages/SesionDidactica1';
 
 const STORAGE_KEY = 'portafolio_student_profile_v1';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('inicio');
+  const [activeSessionId, setActiveSessionId] = useState<number | null>(null);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [student, setStudent] = useState<StudentProfile>(() => {
     try {
@@ -34,16 +36,38 @@ export default function App() {
     }
   }, [student]);
 
+  const handleSelectTab = (tab: ActiveTab) => {
+    setActiveTab(tab);
+    setActiveSessionId(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenSession = (sessionId: number) => {
+    setActiveSessionId(sessionId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackFromSession = () => {
+    setActiveSessionId(null);
+    setActiveTab('inicio');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="editorial-canvas flex min-h-screen flex-col text-[#0F172A]">
       <Header
         activeTab={activeTab}
-        onSelectTab={setActiveTab}
+        onSelectTab={handleSelectTab}
         onOpenProfileModal={() => setIsContactModalOpen(true)}
       />
 
       <main className="flex-1">
-        {activeTab === 'inicio' && <InicioPage />}
+        {activeTab === 'inicio' && activeSessionId === 1 && (
+          <SesionDidactica1 onBack={handleBackFromSession} />
+        )}
+        {activeTab === 'inicio' && activeSessionId === null && (
+          <InicioPage onOpenSession={handleOpenSession} />
+        )}
         {activeTab === 'organizacion' && <OrganizacionPage />}
         {activeTab === 'estudiante' && (
           <EstudiantePage student={student} onUpdateStudent={setStudent} />
@@ -64,7 +88,7 @@ export default function App() {
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
         student={student}
-        onGoToStudent={() => setActiveTab('estudiante')}
+        onGoToStudent={() => handleSelectTab('estudiante')}
       />
     </div>
   );
