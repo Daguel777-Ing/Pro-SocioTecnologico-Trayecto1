@@ -1,21 +1,25 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import {
   AlertTriangle,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
   ClipboardCheck,
+  Cpu,
   ExternalLink,
+  FileText,
   HardDrive,
   Laptop,
   MapPin,
   MonitorCheck,
   MonitorSmartphone,
+  Network,
   ShieldAlert,
   TicketCheck,
   Wrench,
 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { INVENTARIO_TECNICO } from '../data/inventarioData';
 
 const DASHBOARD_URL =
   'https://datastudio.google.com/embed/reporting/12cb78d3-4221-4f5c-9dc6-d832217e809d/page/3nZDG';
@@ -60,63 +64,6 @@ const EQUIPMENT_DISTRIBUTION: EquipmentDistribution[] = [
     supportType: 'Soporte remoto',
   },
 ];
-
-interface InventoryItem {
-  id: string;
-  sede: string;
-  modelo: string;
-  specs: string;
-  estado: string;
-}
-
-const inventario: InventoryItem[] = [
-  { id: 'PC-001', sede: 'Central', modelo: 'Dell OptiPlex', specs: '8GB RAM DDR4, 1TB HDD', estado: 'Operativo' },
-  { id: 'LAP-002', sede: 'Central', modelo: 'HP ProBook', specs: '8GB RAM DDR4, 500GB SSD', estado: 'Operativo' },
-  { id: 'PC-003', sede: 'Central', modelo: 'VIT E2230', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Operativo (Lento)' },
-  { id: 'PC-004', sede: 'Central', modelo: 'VIT E2230', specs: '2GB RAM DDR2, 250GB HDD', estado: 'Obsoleto' },
-  { id: 'PC-005', sede: 'Central', modelo: 'Lenovo ThinkCentre', specs: '4GB RAM DDR3, 1TB HDD', estado: 'Operativo (Disco 95%)' },
-  { id: 'PC-006', sede: 'Central', modelo: 'Lenovo ThinkCentre', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Falla (Bucle Windows)' },
-  { id: 'AIO-007', sede: 'Central', modelo: 'Síragon All-in-One', specs: '8GB RAM DDR4, 1TB HDD', estado: 'Operativo' },
-  { id: 'AIO-008', sede: 'Central', modelo: 'Síragon All-in-One', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Operativo (Falla pantalla)' },
-  { id: 'LAP-009', sede: 'Central', modelo: 'VIT P3300', specs: '4GB RAM DDR3, 320GB HDD', estado: 'Falla (Recalentamiento)' },
-  { id: 'LAP-010', sede: 'Central', modelo: 'VIT P3300', specs: '4GB RAM DDR3, 320GB HDD', estado: 'Operativo (Sin batería)' },
-  { id: 'PC-011', sede: 'Central', modelo: 'HP Compaq', specs: '2GB RAM DDR2, 160GB HDD', estado: 'Obsoleto (32 bits)' },
-  { id: 'PC-012', sede: 'Central', modelo: 'HP Compaq', specs: '2GB RAM DDR2, 160GB HDD', estado: 'Falla (Fuente quemada)' },
-  { id: 'PC-013', sede: 'Central', modelo: 'Dell OptiPlex', specs: '8GB RAM DDR4, 500GB HDD', estado: 'Operativo' },
-  { id: 'PC-014', sede: 'Central', modelo: 'Dell OptiPlex', specs: '8GB RAM DDR4, 500GB HDD', estado: 'Operativo (Teclado dañado)' },
-  { id: 'PC-015', sede: 'Central', modelo: 'Síragon Serie 5000', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Falla (Disco dañado)' },
-  { id: 'PC-016', sede: 'Central', modelo: 'Síragon Serie 5000', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Operativo' },
-  { id: 'LAP-017', sede: 'Guayana', modelo: 'HP ProBook', specs: '8GB RAM DDR4, 500GB SSD', estado: 'Operativo' },
-  { id: 'PC-018', sede: 'Guayana', modelo: 'VIT E2230', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Falla (Corto en placa)' },
-  { id: 'PC-019', sede: 'Guayana', modelo: 'VIT E2230', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Operativo' },
-  { id: 'PC-020', sede: 'Guayana', modelo: 'Lenovo ThinkCentre', specs: '2GB RAM DDR2, 250GB HDD', estado: 'Obsoleto (Windows 7)' },
-  { id: 'PC-021', sede: 'Guayana', modelo: 'Lenovo ThinkCentre', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Falla (USB bloqueados)' },
-  { id: 'PC-022', sede: 'Guayana', modelo: 'Dell OptiPlex', specs: '8GB RAM DDR4, 1TB HDD', estado: 'Operativo' },
-  { id: 'AIO-023', sede: 'Guayana', modelo: 'Síragon All-in-One', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Falla (BSOD RAM)' },
-  { id: 'AIO-024', sede: 'Guayana', modelo: 'Síragon All-in-One', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Operativo' },
-  { id: 'LAP-025', sede: 'Andes', modelo: 'Dell Latitude', specs: '8GB RAM DDR4, 500GB SSD', estado: 'Operativo' },
-  { id: 'LAP-026', sede: 'Andes', modelo: 'VIT P3300', specs: '4GB RAM DDR3, 320GB HDD', estado: 'Falla (Bisagras rotas)' },
-  { id: 'LAP-027', sede: 'Andes', modelo: 'VIT P3300', specs: '4GB RAM DDR3, 320GB HDD', estado: 'Operativo (Wi-Fi inestable)' },
-  { id: 'PC-028', sede: 'Andes', modelo: 'HP Compaq', specs: '2GB RAM DDR2, 160GB HDD', estado: 'Obsoleto' },
-  { id: 'PC-029', sede: 'Andes', modelo: 'HP Compaq', specs: '2GB RAM DDR2, 160GB HDD', estado: 'Falla (Pila BIOS agotada)' },
-  { id: 'PC-030', sede: 'Andes', modelo: 'Lenovo ThinkCentre', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Operativo' },
-  { id: 'PC-031', sede: 'Andes', modelo: 'Síragon Serie 5000', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Operativo' },
-  { id: 'PC-032', sede: 'Andes', modelo: 'Síragon Serie 5000', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Falla (Ransomware)' },
-  { id: 'LAP-033', sede: 'Insular', modelo: 'Dell Latitude', specs: '8GB RAM DDR4, 500GB SSD', estado: 'Operativo' },
-  { id: 'AIO-034', sede: 'Insular', modelo: 'VIT All-in-One', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Falla (Sulfatación)' },
-  { id: 'AIO-035', sede: 'Insular', modelo: 'VIT All-in-One', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Operativo' },
-  { id: 'PC-036', sede: 'Insular', modelo: 'HP ProDesk', specs: '2GB RAM DDR2, 250GB HDD', estado: 'Obsoleto' },
-  { id: 'PC-037', sede: 'Insular', modelo: 'HP ProDesk', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Falla (Red quemada)' },
-  { id: 'PC-038', sede: 'Insular', modelo: 'Lenovo ThinkCentre', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Operativo (Requiere limpieza)' },
-  { id: 'AIO-039', sede: 'Insular', modelo: 'Síragon All-in-One', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Operativo' },
-  { id: 'AIO-040', sede: 'Insular', modelo: 'Síragon All-in-One', specs: '4GB RAM DDR3, 500GB HDD', estado: 'Falla (Módulo encendido)' },
-];
-
-function getSeverity(estado: string): 'ok' | 'warning' | 'critical' {
-  if (estado.startsWith('Falla')) return 'critical';
-  if (estado.startsWith('Obsoleto')) return 'warning';
-  return 'ok';
-}
 
 const SUPPORT_STEPS = [
   {
@@ -165,10 +112,30 @@ const SUPPORT_STEPS = [
   },
 ];
 
+type InventoryFilter = 'todos' | 'operativos' | 'criticos';
+
 export default function DiagnosticoTecnologico() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [filter, setFilter] = useState<InventoryFilter>('todos');
+  const [openSpecIds, setOpenSpecIds] = useState<Record<string, boolean>>({});
 
-  const visibleRows = inventario.slice(0, isExpanded ? inventario.length : 6);
+  const filteredDevices = INVENTARIO_TECNICO.filter((item) => {
+    if (filter === 'operativos') return item.severity === 'ok';
+    if (filter === 'criticos') return item.severity !== 'ok';
+    return true;
+  });
+
+  const visibleRows = filteredDevices.slice(
+    0,
+    isExpanded ? filteredDevices.length : 6
+  );
+
+  const toggleSpecRow = (id: string) => {
+    setOpenSpecIds((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
   return (
     <motion.section
@@ -215,7 +182,7 @@ export default function DiagnosticoTecnologico() {
               ·
             </span>
             <span>
-              Fallas / Obsoletos:{' '}
+              Críticos / Fallas:{' '}
               <strong className="font-mono text-sm font-semibold text-[#B45309] tabular-nums">
                 18
               </strong>
@@ -266,7 +233,7 @@ export default function DiagnosticoTecnologico() {
                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
                       item.isHeadquarters
                         ? 'bg-[#1D4ED8] text-white'
-                        : 'bg-white text-[#0F766E] border border-stone-200'
+                        : 'border border-stone-200 bg-white text-[#0F766E]'
                     }`}
                   >
                     <MapPin className="h-4 w-4" aria-hidden="true" />
@@ -349,15 +316,16 @@ export default function DiagnosticoTecnologico() {
           </div>
         </div>
 
-        {/* 3. Inventario Detallado de Equipos (Tabla responsiva) */}
+        {/* 3. Inventario Detallado de Equipos (Auditoría Técnica Completa) */}
         <div
           className="mt-12 border-t border-stone-100 pt-9"
           aria-labelledby="inventario-detallado-heading"
         >
-          <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
+          <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
             <div>
               <p className="text-xs font-semibold text-[#B45309]">
-                03. Parque tecnológico completo ({inventario.length} equipos)
+                03. Auditoría técnica universitaria ({INVENTARIO_TECNICO.length}{' '}
+                equipos)
               </p>
               <h3
                 id="inventario-detallado-heading"
@@ -365,15 +333,63 @@ export default function DiagnosticoTecnologico() {
               >
                 Inventario Detallado de Equipos
               </h3>
+              <p className="mt-1 text-xs text-slate-500">
+                Haz clic en «Ver ficha técnica» para consultar tarjeta madre,
+                expansión, memoria y diagnóstico de falla.
+              </p>
             </div>
-            <p className="font-mono text-xs text-slate-500 tabular-nums">
-              Mostrando {visibleRows.length} de {inventario.length} equipos
-            </p>
+
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Interactive segmented filter */}
+              <div
+                role="group"
+                aria-label="Filtrar equipos por estado"
+                className="inline-flex items-center gap-1 rounded-lg border border-stone-200 bg-[#FAF8F3] p-1"
+              >
+                <button
+                  type="button"
+                  onClick={() => setFilter('todos')}
+                  className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap shrink-0 ${
+                    filter === 'todos'
+                      ? 'bg-white text-[#0F172A] shadow-xs'
+                      : 'text-slate-600 hover:text-[#0F172A]'
+                  }`}
+                >
+                  Todos (40)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFilter('operativos')}
+                  className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap shrink-0 ${
+                    filter === 'operativos'
+                      ? 'bg-white text-[#0F766E] shadow-xs'
+                      : 'text-slate-600 hover:text-[#0F172A]'
+                  }`}
+                >
+                  Operativos (22)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFilter('criticos')}
+                  className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap shrink-0 ${
+                    filter === 'criticos'
+                      ? 'bg-white text-rose-700 shadow-xs'
+                      : 'text-slate-600 hover:text-[#0F172A]'
+                  }`}
+                >
+                  Críticos / Fallas (18)
+                </button>
+              </div>
+
+              <p className="font-mono text-xs text-slate-500 tabular-nums whitespace-nowrap">
+                Mostrando {visibleRows.length} de {filteredDevices.length}
+              </p>
+            </div>
           </div>
 
           <div
             id="tabla-inventario-equipos"
-            className="mt-5 overflow-x-auto rounded-xl border border-stone-200 bg-white transition-all duration-300"
+            className="mt-5 overflow-x-auto rounded-xl border border-stone-200 bg-white"
           >
             <table className="min-w-full border-collapse text-left text-sm">
               <thead>
@@ -382,103 +398,230 @@ export default function DiagnosticoTecnologico() {
                     ID
                   </th>
                   <th scope="col" className="px-4 py-3.5 whitespace-nowrap">
-                    Sede
+                    Ubicación (Sede + Puesto)
                   </th>
                   <th scope="col" className="px-4 py-3.5 whitespace-nowrap">
-                    Marca/Modelo
+                    Equipo y Procesador
                   </th>
                   <th scope="col" className="px-4 py-3.5 whitespace-nowrap">
-                    Especificaciones (RAM/Disco)
+                    SO y Arquitectura
                   </th>
                   <th scope="col" className="px-4 py-3.5 whitespace-nowrap">
-                    Estado/Falla
+                    Estado
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3.5 text-right whitespace-nowrap"
+                  >
+                    Ficha técnica
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
                 {visibleRows.map((row, idx) => {
-                  const severity = getSeverity(row.estado);
+                  const isSpecOpen = Boolean(openSpecIds[row.id]);
                   return (
-                    <motion.tr
-                      key={row.id}
-                      initial={idx >= 6 ? { opacity: 0, y: 6 } : false}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{
-                        duration: 0.18,
-                        delay: idx >= 6 ? Math.min((idx - 6) * 0.012, 0.22) : 0,
-                      }}
-                      className="transition-colors hover:bg-[#FAF8F3]/60"
-                    >
-                      <td className="font-mono px-4 py-3.5 text-xs font-semibold text-[#1D4ED8] tabular-nums whitespace-nowrap">
-                        {row.id}
-                      </td>
-                      <td className="px-4 py-3.5 font-medium text-[#0F172A] whitespace-nowrap">
-                        {row.sede}
-                      </td>
-                      <td className="px-4 py-3.5 text-slate-800 whitespace-nowrap">
-                        {row.modelo}
-                      </td>
-                      <td className="font-mono px-4 py-3.5 text-xs text-slate-600 tabular-nums whitespace-nowrap">
-                        {row.specs}
-                      </td>
-                      <td className="px-4 py-3.5 whitespace-nowrap">
-                        <span
-                          className={`inline-flex items-center gap-2 text-xs font-medium ${
-                            severity === 'ok'
-                              ? 'text-[#0F766E]'
-                              : severity === 'warning'
-                                ? 'text-[#B45309]'
-                                : 'text-rose-700'
-                          }`}
+                    <Fragment key={row.id}>
+                      <motion.tr
+                        initial={idx >= 6 ? { opacity: 0, y: 4 } : false}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.16,
+                          delay:
+                            idx >= 6 ? Math.min((idx - 6) * 0.01, 0.18) : 0,
+                        }}
+                        className={`transition-colors ${
+                          isSpecOpen
+                            ? 'bg-[#EFF6FF]/45'
+                            : 'hover:bg-[#FAF8F3]/60'
+                        }`}
+                      >
+                        {/* ID */}
+                        <td className="font-mono px-4 py-3.5 align-top text-xs font-semibold text-[#1D4ED8] tabular-nums whitespace-nowrap">
+                          {row.id}
+                        </td>
+
+                        {/* Ubicación (Sede + Puesto) */}
+                        <td className="px-4 py-3.5 align-top">
+                          <p className="text-xs font-semibold text-[#0F172A] whitespace-nowrap">
+                            {row.sede}
+                          </p>
+                          <p className="mt-0.5 text-xs text-slate-600">
+                            {row.puesto}
+                          </p>
+                        </td>
+
+                        {/* Equipo y Procesador (con generación) */}
+                        <td className="px-4 py-3.5 align-top">
+                          <p className="text-xs font-semibold text-[#0F172A] whitespace-nowrap">
+                            {row.equipo}
+                          </p>
+                          <p className="mt-0.5 text-xs text-slate-600 whitespace-nowrap">
+                            {row.procesador}
+                          </p>
+                        </td>
+
+                        {/* SO y Arquitectura */}
+                        <td className="px-4 py-3.5 align-top">
+                          <p className="text-xs font-medium text-slate-800 whitespace-nowrap">
+                            {row.sistemaOperativo}
+                          </p>
+                          <p className="font-mono mt-0.5 text-[11px] text-slate-500 tabular-nums whitespace-nowrap">
+                            {row.arquitectura}
+                          </p>
+                        </td>
+
+                        {/* Estado */}
+                        <td className="px-4 py-3.5 align-top whitespace-nowrap">
+                          <span
+                            className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
+                              row.severity === 'ok'
+                                ? 'text-[#0F766E]'
+                                : row.severity === 'warning'
+                                  ? 'text-[#B45309]'
+                                  : 'text-rose-700'
+                            }`}
+                          >
+                            {row.severity === 'ok' && (
+                              <CheckCircle2
+                                className="h-4 w-4 shrink-0"
+                                aria-hidden="true"
+                              />
+                            )}
+                            {row.severity === 'warning' && (
+                              <HardDrive
+                                className="h-4 w-4 shrink-0"
+                                aria-hidden="true"
+                              />
+                            )}
+                            {row.severity === 'critical' && (
+                              <AlertTriangle
+                                className="h-4 w-4 shrink-0"
+                                aria-hidden="true"
+                              />
+                            )}
+                            <span>{row.estado}</span>
+                          </span>
+                        </td>
+
+                        {/* Botón Ver ficha técnica */}
+                        <td className="px-4 py-3.5 text-right align-top whitespace-nowrap">
+                          <button
+                            type="button"
+                            onClick={() => toggleSpecRow(row.id)}
+                            aria-expanded={isSpecOpen}
+                            aria-controls={`ficha-${row.id}`}
+                            className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap shrink-0 ${
+                              isSpecOpen
+                                ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white'
+                                : 'border-stone-200 bg-white text-[#0F172A] hover:border-[#1D4ED8]/50 hover:text-[#1D4ED8]'
+                            }`}
+                          >
+                            <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+                            <span>
+                              {isSpecOpen ? 'Ocultar ficha' : 'Ver ficha técnica'}
+                            </span>
+                          </button>
+                        </td>
+                      </motion.tr>
+
+                      {/* Fila desplegable con ficha técnica completa */}
+                      {isSpecOpen && (
+                        <tr
+                          id={`ficha-${row.id}`}
+                          className="bg-[#FAF8F3]/90"
                         >
-                          {severity === 'ok' && (
-                            <CheckCircle2
-                              className="h-4 w-4 shrink-0"
-                              aria-hidden="true"
-                            />
-                          )}
-                          {severity === 'warning' && (
-                            <HardDrive
-                              className="h-4 w-4 shrink-0"
-                              aria-hidden="true"
-                            />
-                          )}
-                          {severity === 'critical' && (
-                            <AlertTriangle
-                              className="h-4 w-4 shrink-0"
-                              aria-hidden="true"
-                            />
-                          )}
-                          <span>{row.estado}</span>
-                        </span>
-                      </td>
-                    </motion.tr>
+                          <td colSpan={6} className="px-4 py-4 sm:px-6">
+                            <div className="grid grid-cols-1 gap-4 rounded-xl border border-stone-200 bg-white p-4 sm:p-5 md:grid-cols-2 lg:grid-cols-4">
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#1D4ED8]">
+                                  <Cpu className="h-3.5 w-3.5" aria-hidden="true" />
+                                  <span>Tarjeta Madre</span>
+                                </div>
+                                <p className="text-xs font-medium text-[#0F172A]">
+                                  {row.tarjetaMadre}
+                                </p>
+                              </div>
+
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#0F766E]">
+                                  <Network
+                                    className="h-3.5 w-3.5"
+                                    aria-hidden="true"
+                                  />
+                                  <span>Video y Tarjetas de Red</span>
+                                </div>
+                                <p className="text-xs leading-relaxed text-slate-700">
+                                  {row.tarjetasExpansion}
+                                </p>
+                              </div>
+
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#3730A3]">
+                                  <HardDrive
+                                    className="h-3.5 w-3.5"
+                                    aria-hidden="true"
+                                  />
+                                  <span>RAM y Almacenamiento</span>
+                                </div>
+                                <p className="font-mono text-xs leading-relaxed text-slate-700 tabular-nums">
+                                  {row.ramAlmacenamiento}
+                                </p>
+                              </div>
+
+                              <div className="space-y-1">
+                                <div
+                                  className={`flex items-center gap-1.5 text-[11px] font-semibold ${
+                                    row.severity === 'ok'
+                                      ? 'text-[#0F766E]'
+                                      : row.severity === 'warning'
+                                        ? 'text-[#B45309]'
+                                        : 'text-rose-700'
+                                  }`}
+                                >
+                                  <AlertTriangle
+                                    className="h-3.5 w-3.5"
+                                    aria-hidden="true"
+                                  />
+                                  <span>Diagnóstico Técnico</span>
+                                </div>
+                                <p className="text-xs leading-relaxed text-slate-700">
+                                  {row.diagnostico}
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
                   );
                 })}
               </tbody>
             </table>
           </div>
 
-          <div className="mt-5 flex justify-center">
-            <button
-              type="button"
-              onClick={() => setIsExpanded((prev) => !prev)}
-              aria-expanded={isExpanded}
-              aria-controls="tabla-inventario-equipos"
-              className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-stone-300 bg-[#FAF8F3] px-5 py-2.5 text-sm font-medium text-[#0F172A] shadow-xs transition-all duration-150 hover:border-[#1D4ED8] hover:bg-[#EFF6FF] hover:text-[#1D4ED8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1D4ED8] whitespace-nowrap shrink-0"
-            >
-              <span>
-                {isExpanded
-                  ? 'Ver menos'
-                  : 'Ver inventario completo (40 equipos)'}
-              </span>
-              {isExpanded ? (
-                <ChevronUp className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <ChevronDown className="h-4 w-4" aria-hidden="true" />
-              )}
-            </button>
-          </div>
+          {filteredDevices.length > 6 && (
+            <div className="mt-5 flex justify-center">
+              <button
+                type="button"
+                onClick={() => setIsExpanded((prev) => !prev)}
+                aria-expanded={isExpanded}
+                aria-controls="tabla-inventario-equipos"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-stone-300 bg-[#FAF8F3] px-5 py-2.5 text-sm font-medium text-[#0F172A] shadow-xs transition-all duration-150 hover:border-[#1D4ED8] hover:bg-[#EFF6FF] hover:text-[#1D4ED8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1D4ED8] whitespace-nowrap shrink-0"
+              >
+                <span>
+                  {isExpanded
+                    ? 'Ver menos'
+                    : `Ver inventario completo (${filteredDevices.length} equipos)`}
+                </span>
+                {isExpanded ? (
+                  <ChevronUp className="h-4 w-4" aria-hidden="true" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                )}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* 4. Software de Atención de Fallas (Tarjetas informativas) */}
