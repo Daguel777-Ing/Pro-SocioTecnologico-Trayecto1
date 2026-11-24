@@ -110,7 +110,7 @@ export const DIDACTIC_SESSIONS: DidacticSessionMeta[] = [
     id: 1,
     code: '01',
     title: 'Sesión didáctica 1',
-    subtitle: 'Módulo preparado',
+    subtitle: 'Habilidades Técnicas y Blandas',
     fileName: 'SesionDidactica1.tsx',
   },
   {
