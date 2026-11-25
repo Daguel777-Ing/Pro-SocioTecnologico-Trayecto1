@@ -1,21 +1,26 @@
 import { useState } from 'react';
 import {
   ArrowLeft,
-  CheckCircle2,
   ChevronRight,
   Cpu,
   HardDrive,
   Headphones,
   HeartHandshake,
-  LayoutGrid,
   MessageSquareHeart,
   Network,
   ShieldCheck,
-  SlidersHorizontal,
   Users,
   Wrench,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
+import {
+  ModuloB1SituacionActual,
+  ModuloB2EquipoTrabajo,
+} from '../components/BlandasModulos';
+import {
+  ModuloA1CasoEstudio,
+  ModuloA2EquipoTrabajo,
+} from '../components/TecnicasModulos';
 
 export interface SesionDidacticaProps {
   onBack?: () => void;
@@ -124,166 +129,6 @@ const SOFT_TIPS: ContextTip[] = [
     ringColor: 'hover:border-[#D97706]/50',
   },
 ];
-
-interface ActivityBoardProps {
-  code: string;
-  title: string;
-  subtitle: string;
-  suggestedColumns: string[];
-  accentTheme: 'cobalt' | 'teal' | 'amber';
-}
-
-const BOARD_THEMES = {
-  cobalt: {
-    outerGradient:
-      'from-[#1D4ED8]/45 via-[#0D9488]/30 to-[#D97706]/35',
-    codeColor: 'text-[#1D4ED8]',
-    badgeBg: 'border-[#1D4ED8]/25 bg-[#1D4ED8]/8 text-[#1D4ED8]',
-    cornerColor: 'border-[#1D4ED8]/45',
-    glowShadow: 'shadow-[0_0_24px_-6px_rgba(29,78,216,0.35)]',
-  },
-  teal: {
-    outerGradient:
-      'from-[#0D9488]/45 via-[#1D4ED8]/30 to-[#D97706]/35',
-    codeColor: 'text-[#0F766E]',
-    badgeBg: 'border-[#0D9488]/25 bg-[#0D9488]/10 text-[#0F766E]',
-    cornerColor: 'border-[#0D9488]/45',
-    glowShadow: 'shadow-[0_0_24px_-6px_rgba(13,148,136,0.35)]',
-  },
-  amber: {
-    outerGradient:
-      'from-[#D97706]/45 via-[#0D9488]/30 to-[#1D4ED8]/35',
-    codeColor: 'text-[#B45309]',
-    badgeBg: 'border-[#D97706]/30 bg-[#D97706]/10 text-[#B45309]',
-    cornerColor: 'border-[#D97706]/50',
-    glowShadow: 'shadow-[0_0_24px_-6px_rgba(217,119,6,0.35)]',
-  },
-};
-
-function ActivityBoardPlaceholder({
-  code,
-  title,
-  subtitle,
-  suggestedColumns,
-  accentTheme,
-}: ActivityBoardProps) {
-  const [showStructureGuide, setShowStructureGuide] = useState(false);
-  const theme = BOARD_THEMES[accentTheme];
-
-  return (
-    <div
-      className={`rounded-3xl bg-gradient-to-br ${theme.outerGradient} p-[1.5px] shadow-sm transition-shadow duration-300 hover:shadow-lg`}
-    >
-      <div className="relative overflow-hidden rounded-[calc(1.5rem-1.5px)] bg-white/95 p-6 backdrop-blur-md sm:p-8">
-        {/* Patrón de tablero técnico de fondo */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-60"
-          style={{
-            backgroundImage:
-              'linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px)',
-            backgroundSize: '24px 24px',
-          }}
-        />
-
-        {/* Cabecera del tablero */}
-        <div className="relative z-10 flex flex-col justify-between gap-4 border-b border-stone-200/80 pb-5 sm:flex-row sm:items-center">
-          <div>
-            <span
-              className={`font-mono text-xs font-bold tracking-wide tabular-nums ${theme.codeColor}`}
-            >
-              Módulo {code}
-            </span>
-            <h3 className="font-display mt-1 text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl">
-              {title}
-            </h3>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setShowStructureGuide((prev) => !prev)}
-            aria-expanded={showStructureGuide}
-            className={`inline-flex cursor-pointer items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-semibold transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] whitespace-nowrap shrink-0 ${theme.badgeBg} ${theme.glowShadow}`}
-          >
-            <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>
-              {showStructureGuide
-                ? 'Ocultar guía del cuadro'
-                : 'Espacio reservado · Ver guía'}
-            </span>
-          </button>
-        </div>
-
-        {/* Zona central amplia para el futuro cuadro */}
-        <div className="relative z-10 mt-6 flex min-h-[300px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-stone-300/90 bg-[#FAF8F3]/85 px-6 py-12 text-center backdrop-blur-xs">
-          {/* Escuadras técnicas en las esquinas */}
-          <span
-            aria-hidden="true"
-            className={`pointer-events-none absolute top-3 left-3 h-4 w-4 rounded-tl-md border-t-2 border-l-2 ${theme.cornerColor}`}
-          />
-          <span
-            aria-hidden="true"
-            className={`pointer-events-none absolute top-3 right-3 h-4 w-4 rounded-tr-md border-t-2 border-r-2 ${theme.cornerColor}`}
-          />
-          <span
-            aria-hidden="true"
-            className={`pointer-events-none absolute bottom-3 left-3 h-4 w-4 rounded-bl-md border-b-2 border-l-2 ${theme.cornerColor}`}
-          />
-          <span
-            aria-hidden="true"
-            className={`pointer-events-none absolute right-3 bottom-3 h-4 w-4 rounded-br-md border-r-2 border-b-2 ${theme.cornerColor}`}
-          />
-
-          <div
-            className={`flex h-14 w-14 items-center justify-center rounded-2xl border border-white/80 bg-white text-[#0F172A] ${theme.glowShadow}`}
-          >
-            <LayoutGrid
-              className={`h-6 w-6 ${theme.codeColor}`}
-              aria-hidden="true"
-            />
-          </div>
-
-          <p className="font-display mt-5 text-base font-bold text-[#0F172A] sm:text-lg">
-            Espacio reservado para el cuadro
-          </p>
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-600">
-            {subtitle}
-          </p>
-
-          <AnimatePresence initial={false}>
-            {showStructureGuide && (
-              <motion.div
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.18 }}
-                className="mt-6 w-full max-w-2xl rounded-xl border border-stone-200 bg-white/95 p-4 text-left shadow-xs"
-              >
-                <p className="text-xs font-semibold text-[#0F172A]">
-                  Columnas sugeridas para el despliegue del cuadro {code}:
-                </p>
-                <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  {suggestedColumns.map((col) => (
-                    <div
-                      key={col}
-                      className="flex items-center gap-2 rounded-lg bg-[#FAF8F3] px-3 py-2 text-xs text-slate-700"
-                    >
-                      <CheckCircle2
-                        className={`h-3.5 w-3.5 shrink-0 ${theme.codeColor}`}
-                        aria-hidden="true"
-                      />
-                      <span>{col}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function SesionDidactica1({ onBack }: SesionDidacticaProps) {
   const [activeTab, setActiveTab] = useState<SkillTab>('tecnicas');
@@ -799,33 +644,10 @@ export default function SesionDidactica1({ onBack }: SesionDidacticaProps) {
                     </div>
                   </div>
 
-                  {/* Dos tableros reservados amplios (A.1 y A.2) */}
-                  <div className="mt-10 space-y-7">
-                    <ActivityBoardPlaceholder
-                      code="A.1"
-                      title="A.1 Cuadro de habilidades técnicas para atender el caso de estudio"
-                      subtitle="Contenedor preparado para incorporar la matriz de habilidades técnicas aplicadas a la problemática de los 40 equipos y el convenio de «Aventura en los paisajes»."
-                      suggestedColumns={[
-                        'Situación o falla tecnológica',
-                        'Habilidad técnica requerida',
-                        'Herramienta o protocolo (GLPI / AnyDesk)',
-                        'Impacto en las 4 sedes',
-                      ]}
-                      accentTheme="cobalt"
-                    />
-
-                    <ActivityBoardPlaceholder
-                      code="A.2"
-                      title="A.2 Cuadro de habilidades técnicas del equipo de trabajo"
-                      subtitle="Contenedor preparado para detallar las competencias técnicas específicas del Ingeniero en Sistemas, el Técnico en Informática y los roles operativos."
-                      suggestedColumns={[
-                        'Rol dentro de la organización',
-                        'Competencia técnica principal',
-                        'Nivel de dominio requerido',
-                        'Responsabilidad en el soporte STU',
-                      ]}
-                      accentTheme="teal"
-                    />
+                  {/* Dos cuadros interactivos (A.1 y A.2) */}
+                  <div className="mt-10 space-y-8">
+                    <ModuloA1CasoEstudio />
+                    <ModuloA2EquipoTrabajo />
                   </div>
                 </motion.div>
               ) : (
@@ -970,33 +792,10 @@ export default function SesionDidactica1({ onBack }: SesionDidacticaProps) {
                     </div>
                   </div>
 
-                  {/* Dos tableros reservados amplios (B.1 y B.2) */}
-                  <div className="mt-10 space-y-7">
-                    <ActivityBoardPlaceholder
-                      code="B.1"
-                      title="B.1 Cuadro de habilidades blandas para atender la situación actual"
-                      subtitle="Contenedor preparado para incorporar el análisis de habilidades blandas aplicadas a las quejas del personal, el aislamiento de las sucursales y la coordinación del convenio."
-                      suggestedColumns={[
-                        'Actor o situación de conflicto',
-                        'Habilidad blanda necesaria',
-                        'Estrategia de comunicación / mediación',
-                        'Resultado esperado en el clima laboral',
-                      ]}
-                      accentTheme="teal"
-                    />
-
-                    <ActivityBoardPlaceholder
-                      code="B.2"
-                      title="B.2 Cuadro de habilidades blandas del equipo de trabajo"
-                      subtitle="Contenedor preparado para incorporar el perfil socioemocional y comunicativo requerido por los especialistas de tecnología y líderes de área."
-                      suggestedColumns={[
-                        'Integrante / Rol del equipo',
-                        'Competencia interpersonal clave',
-                        'Aplicación en atención presencial y remota',
-                        'Indicador de mejora continua',
-                      ]}
-                      accentTheme="amber"
-                    />
+                  {/* Dos cuadros interactivos (B.1 y B.2) */}
+                  <div className="mt-10 space-y-8">
+                    <ModuloB1SituacionActual />
+                    <ModuloB2EquipoTrabajo />
                   </div>
                 </motion.div>
               )}
